@@ -3,13 +3,16 @@ package com.codepath.flicks.layouts;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codepath.flicks.R;
 import com.codepath.flicks.models.Movie;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -27,17 +30,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MovieDetails extends AppCompatActivity {
+public class MovieDetails extends YouTubeBaseActivity {
 
     @BindView(R.id.tvMDTitle) TextView tvTitle;
     @BindView(R.id.tvMDOverview) TextView tvOverview;
     @BindView(R.id.tvMDReleaseDateValue) TextView tvReleaseDate;
-    @BindView(R.id.ivMDVideoImage) ImageView ivVideoImage;
+    //@BindView(R.id.ivMDVideoImage) ImageView ivVideoImage;
     @BindView(R.id.ivMDImage) ImageView ivImage;
     @BindView(R.id.tvMDRuntimeValue) TextView tvRuntime;
     @BindView(R.id.tvMDGenreValue) TextView tvGenre;
     @BindView(R.id.tvMDVotingAverageValue) RatingBar tvVotingAverage;
     @BindView(R.id.tvMDTotalVotesValue) TextView tvTotalVotes;
+    @BindView(R.id.player) YouTubePlayerView youTubePlayerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,7 @@ public class MovieDetails extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
 
-        Movie movie = (Movie) getIntent().getSerializableExtra("movieObject");
+        final Movie movie = (Movie) getIntent().getSerializableExtra("movieObject");
 
         String url = String.format("https://api.themoviedb.org/3/movie/%s?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed", movie.getId());
         asyncCall(url);
@@ -61,7 +65,24 @@ public class MovieDetails extends AppCompatActivity {
         String imagePath = (orientation == Configuration.ORIENTATION_PORTRAIT) ? movie.getPosterPath() : movie.getBackdropPath();
         Picasso.with(this).load(imagePath).placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder).fit().transform(new RoundedCornersTransformation(10, 10)).into(ivImage);
-        Picasso.with(this).load(movie.getBackdropPath()).placeholder(R.drawable.placeholder).into(ivVideoImage);
+
+        youTubePlayerView.initialize("AIzaSyCk70hKeShEmA5EDKGNDDaejcUvdb2pNW0",
+                new YouTubePlayer.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                                                        YouTubePlayer youTubePlayer, boolean b) {
+                        if(null== youTubePlayer) return;
+                        String videoUrl = String.format("https://api.themoviedb.org/3/movie/%s/trailers?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed", movie.getId());
+                        if(!b) {
+                            asyncVideoCall(videoUrl, youTubePlayer);
+                        }
+                    }
+                    @Override
+                    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                                        YouTubeInitializationResult youTubeInitializationResult) {
+
+                    }
+                });
     }
 
     private OkHttpClient client = new OkHttpClient();
@@ -93,6 +114,38 @@ public class MovieDetails extends AppCompatActivity {
                                 }
                             }
                             tvGenre.setText(genre);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+        });
+    }
+
+    public void asyncVideoCall(String url, final YouTubePlayer youTubePlayer) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                final String responseData = response.body().string();
+                MovieDetails.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseData);
+                            JSONArray youtubeArray = jsonObject.getJSONArray("youtube");
+                            if(youtubeArray.length() > 0) {
+                                JSONObject y = youtubeArray.getJSONObject(0);
+                                youTubePlayer.cueVideo(y.getString("source"));
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
