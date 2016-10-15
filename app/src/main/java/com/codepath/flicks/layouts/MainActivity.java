@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.codepath.flicks.R;
 import com.codepath.flicks.adapters.SampleFragmentPagerAdapter;
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("Flicks", "onPageScrolled: " + position);
                 scrolledPage = position;
             }
 

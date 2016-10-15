@@ -1,11 +1,13 @@
 package com.codepath.flicks.layouts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.codepath.flicks.R;
@@ -88,6 +90,16 @@ public class PageFragment extends Fragment {
         lvItems = (ListView) swipeContainer.findViewById(R.id.lvMovies);
         movieAdapter = new MovieArrayAdapter(PageFragment.this.getContext(), movies);
         lvItems.setAdapter(movieAdapter);
+
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getActivity(), MovieDetails.class);
+                i.putExtra("movieObject", movieAdapter.getItem(position));
+                startActivity(i);
+            }
+        });
+
         return view;
     }
 
@@ -103,13 +115,6 @@ public class PageFragment extends Fragment {
                     movieJsonResults = response.getJSONArray("results");
                     movies.clear();
                     movies.addAll(Movie.fromJSONArray(movieJsonResults));
-//                    if(movieAdapter != null) {
-//                        movieAdapter.clear();
-//                        movieAdapter.addAll(movies);
-//                    } else {
-//                        movieAdapter = new MovieArrayAdapter(PageFragment.this.getContext(), movies);
-//                    }
-//                    lvItems.setAdapter(movieAdapter);
                     movieAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();

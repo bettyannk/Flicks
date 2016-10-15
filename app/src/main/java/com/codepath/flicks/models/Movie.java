@@ -4,15 +4,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Movie {
+public class Movie implements Serializable {
 
     String posterPath;
     String backdropPath;
     String originalTitle;
     String overview;
+    String releaseDate;
     Double voteAverage;
+    int voteCount;
     long id;
     Double popularity;
 
@@ -51,12 +54,22 @@ public class Movie {
         return overview;
     }
 
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
     public Movie(JSONObject jsonObject) throws JSONException {
         this.posterPath = jsonObject.getString("poster_path");
         this.backdropPath = jsonObject.getString("backdrop_path");
         this.originalTitle = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
         this.voteAverage = jsonObject.getDouble("vote_average");
+        this.voteCount = jsonObject.getInt("vote_count");
+        this.releaseDate = jsonObject.getString("release_date");
         this.id = jsonObject.getLong("id");
     }
 
