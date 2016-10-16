@@ -1,17 +1,18 @@
-package com.codepath.flicks.layouts;
+package com.codepath.flicks.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.codepath.flicks.R;
-import com.codepath.flicks.adapters.MovieArrayAdapter;
+import com.codepath.flicks.adapters.ItemClickSupport;
+import com.codepath.flicks.adapters.MovieAdapter;
 import com.codepath.flicks.models.Movie;
 
 import org.json.JSONArray;
@@ -30,22 +31,22 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class PageFragment extends Fragment {
+public class MovieListFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private int mPage;
     private SwipeRefreshLayout swipeContainer;
 
     ArrayList<Movie> movies;
-    MovieArrayAdapter movieAdapter;
-    @BindView(R.id.lvMovies) ListView lvItems;
+    MovieAdapter movieAdapter;
+    @BindView(R.id.lvMovies) RecyclerView lvItems;
 
     private Unbinder unbinder;
 
-    public static PageFragment newInstance(int page) {
+    public static MovieListFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        PageFragment fragment = new PageFragment();
+        MovieListFragment fragment = new MovieListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,7 +68,7 @@ public class PageFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                String url = "";
+                String url;
                 switch (MainActivity.scrolledPage) {
                     case 0: url = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
                         break;
@@ -95,18 +96,21 @@ public class PageFragment extends Fragment {
             asyncCall("https://api.themoviedb.org/3/movie/upcoming?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
         }
 
-        movieAdapter = new MovieArrayAdapter(PageFragment.this.getContext(), movies);
+        movieAdapter = new MovieAdapter(MovieListFragment.this.getContext(), movies);
         lvItems.setAdapter(movieAdapter);
+        lvItems.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getActivity(), MovieDetails.class);
-                i.putExtra("movieObject", movieAdapter.getItem(position));
-                startActivity(i);
+        ItemClickSupport.addTo(lvItems).setOnItemClickListener(
+            new ItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                    Movie movie = movies.get(position);
+                    Intent intent = new Intent(getActivity(), MovieDetails.class);
+                    intent.putExtra("movieObject", movie);
+                    startActivity(intent);
+                }
             }
-        });
-
+        );
         return view;
     }
 
@@ -123,16 +127,16 @@ public class PageFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            JSONObject responseJSON = new JSONObject(responseData);
-                            JSONArray movieJsonResults = responseJSON.getJSONArray("results");
-                            movies.clear();
-                            movies.addAll(Movie.fromJSONArray(movieJsonResults));
-                            movieAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        swipeContainer.setRefreshing(false);
+                    try {
+                        JSONObject responseJSON = new JSONObject(responseData);
+                        JSONArray movieJsonResults = responseJSON.getJSONArray("results");
+                        movies.clear();
+                        movies.addAll(Movie.fromJSONArray(movieJsonResults));
+                        movieAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    swipeContainer.setRefreshing(false);
                     }
                 });
             }

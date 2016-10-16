@@ -32,7 +32,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     }
 
     public MovieArrayAdapter(Context context, List<Movie> movies) {
-        super(context, R.layout.item_movie, movies);
+        super(context, R.layout.popular_movie, movies);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_movie, parent, false);
+            convertView = inflater.inflate(R.layout.popular_movie, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

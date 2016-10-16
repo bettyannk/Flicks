@@ -1,4 +1,4 @@
-package com.codepath.flicks.layouts;
+package com.codepath.flicks.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

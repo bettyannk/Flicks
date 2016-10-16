@@ -5,14 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.codepath.flicks.layouts.PageFragment;
+import com.codepath.flicks.activities.MovieListFragment;
 
-public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
+public class MovieFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[] { "Now Playing", "Popular", "Upcoming" };
     private Context context;
 
-    public SampleFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public MovieFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
     }
@@ -24,7 +24,7 @@ public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position + 1);
+        return MovieListFragment.newInstance(position + 1);
     }
 
     @Override
