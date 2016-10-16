@@ -90,8 +90,7 @@ public class MovieAdapter extends
         viewHolder.ivImage.setImageResource(0);
         viewHolder.tvTitle.setText(movie.getOriginalTitle());
         viewHolder.tvOverview.setText(movie.getOverview());
-        int orientation = getContext().getResources().getConfiguration().orientation;
-        String imagePath = (orientation == Configuration.ORIENTATION_PORTRAIT) ? movie.getPosterPath() : movie.getBackdropPath();
+        String imagePath = movie.getBackdropPath();
         Picasso.with(getContext()).load(imagePath).placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder).fit().transform(new RoundedCornersTransformation(10, 10)).into(viewHolder.ivImage);
 
