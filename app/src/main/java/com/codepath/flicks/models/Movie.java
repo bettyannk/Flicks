@@ -70,6 +70,8 @@ public class Movie implements Serializable {
         this.voteAverage = jsonObject.getDouble("vote_average");
         this.voteCount = jsonObject.getInt("vote_count");
         this.releaseDate = jsonObject.getString("release_date");
+        this.popularity = jsonObject.getDouble("popularity");
+
         this.id = jsonObject.getLong("id");
     }
 

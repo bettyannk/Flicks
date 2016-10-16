@@ -35,13 +35,13 @@ public class MovieDetails extends YouTubeBaseActivity {
     @BindView(R.id.tvMDTitle) TextView tvTitle;
     @BindView(R.id.tvMDOverview) TextView tvOverview;
     @BindView(R.id.tvMDReleaseDateValue) TextView tvReleaseDate;
-    //@BindView(R.id.ivMDVideoImage) ImageView ivVideoImage;
     @BindView(R.id.ivMDImage) ImageView ivImage;
     @BindView(R.id.tvMDRuntimeValue) TextView tvRuntime;
     @BindView(R.id.tvMDGenreValue) TextView tvGenre;
     @BindView(R.id.tvMDVotingAverageValue) RatingBar tvVotingAverage;
     @BindView(R.id.tvMDTotalVotesValue) TextView tvTotalVotes;
     @BindView(R.id.player) YouTubePlayerView youTubePlayerView;
+    @BindView(R.id.tvMDPopularityValue) TextView tvPopularity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class MovieDetails extends YouTubeBaseActivity {
         tvReleaseDate.setText(movie.getReleaseDate());
         tvTotalVotes.setText(String.valueOf(movie.getVoteCount()));
         tvVotingAverage.setRating(Float.parseFloat(String.valueOf(movie.getVoteAverage())));
+        tvPopularity.setText(String.format("%.2f", movie.getPopularity()));
         int orientation = getResources().getConfiguration().orientation;
         String imagePath = (orientation == Configuration.ORIENTATION_PORTRAIT) ? movie.getPosterPath() : movie.getBackdropPath();
         Picasso.with(this).load(imagePath).placeholder(R.drawable.placeholder)

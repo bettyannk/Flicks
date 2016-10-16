@@ -2,4 +2,5 @@
 <resources>
     <dimen name="placeholder_height">180dp</dimen>
     <dimen name="placeholder_width">300dp</dimen>
+    <dimen name="movie_width">300dp</dimen>
 </resources>
