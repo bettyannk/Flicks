@@ -13,16 +13,22 @@ import android.widget.ListView;
 import com.codepath.flicks.R;
 import com.codepath.flicks.adapters.MovieArrayAdapter;
 import com.codepath.flicks.models.Movie;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-import cz.msebera.android.httpclient.Header;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
@@ -32,7 +38,9 @@ public class PageFragment extends Fragment {
 
     ArrayList<Movie> movies;
     MovieArrayAdapter movieAdapter;
-    ListView lvItems;
+    @BindView(R.id.lvMovies) ListView lvItems;
+
+    private Unbinder unbinder;
 
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -52,7 +60,7 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
-        //RelativeLayout rl = (RelativeLayout) view;
+        unbinder = ButterKnife.bind(this, view);
 
         swipeContainer = (SwipeRefreshLayout) view;
 
@@ -69,7 +77,7 @@ public class PageFragment extends Fragment {
                         break;
                     default: url = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
                 }
-                fetchMoviesAsync(url);
+                asyncCall(url);
             }
         });
 
@@ -80,14 +88,13 @@ public class PageFragment extends Fragment {
         movies = new ArrayList<>();
 
         if(mPage == 1) {
-            fetchMoviesAsync("https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
+            asyncCall("https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
         } else if(mPage == 2){
-            fetchMoviesAsync("https://api.themoviedb.org/3/movie/popular?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
+            asyncCall("https://api.themoviedb.org/3/movie/popular?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
         } else {
-            fetchMoviesAsync("https://api.themoviedb.org/3/movie/upcoming?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
+            asyncCall("https://api.themoviedb.org/3/movie/upcoming?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed");
         }
 
-        lvItems = (ListView) swipeContainer.findViewById(R.id.lvMovies);
         movieAdapter = new MovieArrayAdapter(PageFragment.this.getContext(), movies);
         lvItems.setAdapter(movieAdapter);
 
@@ -103,29 +110,42 @@ public class PageFragment extends Fragment {
         return view;
     }
 
-    public void fetchMoviesAsync(String url) {
+    private OkHttpClient client = new OkHttpClient();
 
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        client.get(url, new JsonHttpResponseHandler(){
+    public void asyncCall(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray movieJsonResults = null;
-                try {
-                    movieJsonResults = response.getJSONArray("results");
-                    movies.clear();
-                    movies.addAll(Movie.fromJSONArray(movieJsonResults));
-                    movieAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                swipeContainer.setRefreshing(false);
+            public void onResponse(Call call, final Response response) throws IOException {
+                final String responseData = response.body().string();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject responseJSON = new JSONObject(responseData);
+                            JSONArray movieJsonResults = responseJSON.getJSONArray("results");
+                            movies.clear();
+                            movies.addAll(Movie.fromJSONArray(movieJsonResults));
+                            movieAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        swipeContainer.setRefreshing(false);
+                    }
+                });
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
+            public void onFailure(Call call, IOException e) {
+
             }
         });
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
