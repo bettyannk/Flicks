@@ -15,29 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-
-        <!--<ImageView-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/ivMDVideoImage"-->
-            <!--tools:src="@drawable/placeholder"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true" />-->
-
-        <!--<ImageView-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:foregroundGravity="center"-->
-            <!--android:id="@+id/ivMDPlayIcon"-->
-            <!--android:alpha=".75"-->
-            <!--android:src="@drawable/youtube_icon_full_color"-->
-            <!--android:layout_alignLeft="@+id/ivMDVideoImage"-->
-            <!--android:layout_alignRight="@+id/ivMDVideoImage"-->
-            <!--android:layout_marginTop="100dp"/>-->
-
         <ImageView
             android:layout_width="@dimen/movie_width"
             android:layout_height="match_parent"
