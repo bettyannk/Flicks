@@ -99,9 +99,10 @@ public class MovieDetails extends YouTubeBaseActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(responseData);
                             int runtime = jsonObject.getInt("runtime");
-                            int hours = runtime / 60; //since both are ints, you get an int
+                            int hours = runtime / 60;
                             int minutes = runtime % 60;
-                            tvRuntime.setText(hours + "h " +  minutes + "min");
+                            String time = hours + "h " +  minutes + "min";
+                            tvRuntime.setText(time);
                             JSONArray genreArray = jsonObject.getJSONArray("genres");
                             String genre = "";
                             for(int i = 0; i < genreArray.length(); i++) {

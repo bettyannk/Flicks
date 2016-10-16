@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.codepath.flicks.R;
 
-public class PopularMovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class PopularMovieHolder extends RecyclerView.ViewHolder {
     ImageView ivImage;
     TextView tvTitle;
     TextView tvOverview;
@@ -17,7 +17,6 @@ public class PopularMovieHolder extends RecyclerView.ViewHolder implements View.
         ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
         tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
         tvOverview = (TextView) itemView.findViewById(R.id.tvOverview);
-        itemView.setOnClickListener(this);
     }
 
     public ImageView getIvImage() {
@@ -30,10 +29,5 @@ public class PopularMovieHolder extends RecyclerView.ViewHolder implements View.
 
     public TextView getTvOverview() {
         return tvOverview;
-    }
-
-    @Override
-    public void onClick(View view) {
-        int position = getLayoutPosition();
     }
 }

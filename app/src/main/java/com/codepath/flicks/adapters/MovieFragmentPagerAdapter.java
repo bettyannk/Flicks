@@ -10,11 +10,9 @@ import com.codepath.flicks.activities.MovieListFragment;
 public class MovieFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[] { "Now Playing", "Popular", "Upcoming" };
-    private Context context;
 
     public MovieFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.context = context;
     }
 
     @Override
@@ -29,7 +27,6 @@ public class MovieFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
         return tabTitles[position];
     }
 }

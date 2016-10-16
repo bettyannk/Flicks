@@ -23,8 +23,6 @@ import okhttp3.Response;
 
 public class MovieYoutubeActivity extends YouTubeBaseActivity {
     private OkHttpClient client = new OkHttpClient();
-    private YouTubePlayerView youTubePlayerView;
-    private static String API_KEY = "AIzaSyCk70hKeShEmA5EDKGNDDaejcUvdb2pNW0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +31,8 @@ public class MovieYoutubeActivity extends YouTubeBaseActivity {
         Intent intent = getIntent();
         final Long movieId = intent.getLongExtra("movie_id", -1);
         if (movieId != -1) {
-            youTubePlayerView = (YouTubePlayerView) findViewById(R.id.myplayer);
-            youTubePlayerView.initialize(API_KEY,
+            YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.myplayer);
+            youTubePlayerView.initialize("AIzaSyCk70hKeShEmA5EDKGNDDaejcUvdb2pNW0",
                     new YouTubePlayer.OnInitializedListener() {
                         @Override
                         public void onInitializationSuccess(YouTubePlayer.Provider provider,

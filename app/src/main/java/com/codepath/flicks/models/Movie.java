@@ -40,10 +40,7 @@ public class Movie implements Serializable {
     }
 
     public Boolean isPopularMovie() {
-        if(voteAverage < 5.0) {
-            return false;
-        }
-        return true;
+        return voteAverage >= 5.0;
     }
 
     public String getOriginalTitle() {

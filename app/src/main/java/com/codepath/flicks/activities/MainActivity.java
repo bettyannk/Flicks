@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.sliding_tabs) TabLayout tabLayout;
+
     public static int scrolledPage = 0;
 
     @Override

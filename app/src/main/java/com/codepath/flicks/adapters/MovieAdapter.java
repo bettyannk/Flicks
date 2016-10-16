@@ -50,11 +50,9 @@ public class MovieAdapter extends
         @BindView(R.id.ivImage) ImageView ivImage;
         @BindView(R.id.tvTitle) TextView tvTitle;
         @BindView(R.id.tvOverview) TextView tvOverview;
-        private final Context context;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            this.context = itemView.getContext();
         }
     }
 
@@ -63,13 +61,14 @@ public class MovieAdapter extends
         RecyclerView.ViewHolder viewHolder;
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
+        View view;
 
         if(viewType == UNPOPULAR) {
-            View v2 = inflater.inflate(R.layout.unpopular_movie, parent, false);
-            viewHolder = new UnPopularMovieHolder(v2);
+            view = inflater.inflate(R.layout.unpopular_movie, parent, false);
+            viewHolder = new UnPopularMovieHolder(view);
         } else {
-            View v1 = inflater.inflate(R.layout.popular_movie, parent, false);
-            viewHolder = new PopularMovieHolder(v1);
+            view = inflater.inflate(R.layout.popular_movie, parent, false);
+            viewHolder = new PopularMovieHolder(view);
         }
         return viewHolder;
     }
@@ -77,11 +76,11 @@ public class MovieAdapter extends
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         if(viewHolder.getItemViewType() == POPULAR) {
-            PopularMovieHolder vh1 = (PopularMovieHolder) viewHolder;
-            configurePopularMovieViewHolder(vh1, position);
+            PopularMovieHolder mh1 = (PopularMovieHolder) viewHolder;
+            configurePopularMovieViewHolder(mh1, position);
         } else {
-            UnPopularMovieHolder vh2 = (UnPopularMovieHolder) viewHolder;
-            configureUnpopularMovieViewHolder(vh2, position);
+            UnPopularMovieHolder mh2 = (UnPopularMovieHolder) viewHolder;
+            configureUnpopularMovieViewHolder(mh2, position);
         }
     }
 
