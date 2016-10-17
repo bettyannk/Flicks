@@ -200,5 +200,23 @@
             android:paddingTop="10dp"
             android:layout_toRightOf="@id/tvMDReleaseDateKey"
             android:layout_below="@+id/tvMDRuntimeKey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="10dp"
+            android:text="More Videos"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/tvMDMoreVideosKey"
+            android:paddingTop="10dp"
+            android:layout_below="@+id/tvMDReleaseDateValue"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/horizontal_recycler_view"
+            android:background="#fff"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/tvMDMoreVideosKey"
+            android:layout_height="120dp"/>
     </RelativeLayout>
 </ScrollView>

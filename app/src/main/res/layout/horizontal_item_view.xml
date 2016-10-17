@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="140dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:textColor="#787878"
+        android:textSize="18sp"
+        android:paddingLeft="16dp"
+        android:id="@+id/txtView"
+        tools:src="@drawable/placeholder"
+        android:layout_width="150dp"
+        android:layout_height="100dp" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:foregroundGravity="center"
+        android:id="@+id/ivPlayIcon"
+        android:alpha=".75"
+        android:src="@drawable/youtube_icon_full_color"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="60dp"
+        android:layout_alignParentTop="true" />
+
+</RelativeLayout>

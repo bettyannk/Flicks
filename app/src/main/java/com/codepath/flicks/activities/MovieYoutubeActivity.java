@@ -32,7 +32,7 @@ public class MovieYoutubeActivity extends YouTubeBaseActivity {
         final Long movieId = intent.getLongExtra("movie_id", -1);
         if (movieId != -1) {
             YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.myplayer);
-            youTubePlayerView.initialize("AIzaSyCk70hKeShEmA5EDKGNDDaejcUvdb2pNW0",
+            youTubePlayerView.initialize(getString(R.string.youtube_api_key),
                     new YouTubePlayer.OnInitializedListener() {
                         @Override
                         public void onInitializationSuccess(YouTubePlayer.Provider provider,

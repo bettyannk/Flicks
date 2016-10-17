@@ -2,11 +2,14 @@ package com.codepath.flicks.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codepath.flicks.R;
+import com.codepath.flicks.adapters.VideosHorizontalAdapter;
 import com.codepath.flicks.models.Movie;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -19,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +68,7 @@ public class MovieDetails extends YouTubeBaseActivity {
         Picasso.with(this).load(imagePath).placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder).fit().transform(new RoundedCornersTransformation(10, 10)).into(ivImage);
 
-        youTubePlayerView.initialize("AIzaSyCk70hKeShEmA5EDKGNDDaejcUvdb2pNW0",
+        youTubePlayerView.initialize(getString(R.string.youtube_api_key),
                 new YouTubePlayer.OnInitializedListener() {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
@@ -139,12 +143,24 @@ public class MovieDetails extends YouTubeBaseActivity {
                     @Override
                     public void run() {
                         try {
+                            ArrayList<String> horizontalList = new ArrayList<>();
                             JSONObject jsonObject = new JSONObject(responseData);
                             JSONArray youtubeArray = jsonObject.getJSONArray("youtube");
                             if(youtubeArray.length() > 0) {
-                                JSONObject y = youtubeArray.getJSONObject(0);
-                                youTubePlayer.cueVideo(y.getString("source"));
+                                youTubePlayer.cueVideo(youtubeArray.getJSONObject(0).getString("source"));
+                                for (int i = 0; i < youtubeArray.length(); i++) {
+                                    JSONObject y = youtubeArray.getJSONObject(i);
+                                    horizontalList.add(y.getString("source"));
+                                }
                             }
+                            RecyclerView horizontal_recycler_view= (RecyclerView) findViewById(R.id.horizontal_recycler_view);
+                            VideosHorizontalAdapter videosHorizontalAdapter;
+
+                            videosHorizontalAdapter =new VideosHorizontalAdapter(MovieDetails.this, horizontalList);
+                            LinearLayoutManager horizontalLayoutManagaer
+                                    = new LinearLayoutManager(MovieDetails.this, LinearLayoutManager.HORIZONTAL, false);
+                            horizontal_recycler_view.setLayoutManager(horizontalLayoutManagaer);
+                            horizontal_recycler_view.setAdapter(videosHorizontalAdapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
