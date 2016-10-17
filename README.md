@@ -2,7 +2,9 @@
 
 **Flicks** shows the latest, popular and upcoming movies currently playing in theaters. The app utilizes the Movie Database API to display images and basic information about these movies to the user.
 
-Time spent: **35** hours spent in total
+*Note:* To run the application, it is required to add a String resource 'youtube_api_key' with youtube api key as value.
+
+Time spent: **30** hours spent in total
 
 ## User Stories
 
@@ -44,7 +46,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+[Youtube](https://www.youtube.com/watch?v=2qjZHIuG5Yc)
 
 ## Notes
 
