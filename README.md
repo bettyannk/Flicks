@@ -37,7 +37,7 @@ The following **additional** features are implemented:
 * [x] Swipe Views with Tabs to see popular and upcoming videos.
 * [x] Replaced ListView with RecyclerView which makes it easier to reuse cells while scrolling.
 * [x] Horizontal scroll view using RecyclerView to view more trailers in the movie details activity.
-* [x] User interface improved by using CardView.
+* [x] User interface improved by using CardView and RatingBar.
 * [x] Making movie details API call to fetch runtime and genre information and displaying in Movie Details screens.
 
 ## Video Walkthrough
